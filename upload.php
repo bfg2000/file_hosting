@@ -27,6 +27,7 @@ if(
 	    "application/x-gzip" => "gz",
 	);
 
+
 	$accepted_info = array(
 		"application/msword" => "doc",
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document" => "docx",
@@ -49,23 +50,37 @@ if(
         $mime = finfo_file( $finfo, $_FILES["userfile"]["tmp_name"] );
         $mime = array_shift( explode( ';', $mime ) );
 		
-        if( ! array_key_exists( $mime, $accepted_backups ) && ! array_key_exists( $mime, $accepted_info) )  /* or use isset: ! isset( $accepted[ $mime ] ) */ {
+        if( ! array_key_exists( $mime, $accepted_backups ) )  /* or use isset: ! isset( $accepted[ $mime ] ) */ {
 
             echo 'Ошибка: Неподдерживаемый тип файла. <br/>';
 		} else {
-			if ( array_key_exists( $mime, $accepted_backups )) {
-				$upload_file = $upload_dir . "backups/" . basename($_FILES["userfile"]["name"]);
-				move_uploaded_file($_FILES["userfile"]["tmp_name"], $upload_file);
-				echo "Файл ". htmlspecialchars( basename( $_FILES["userfile"]["name"])). " был загружен в папку 'Мои архивы конфигураций'. <br/>";
-        	} elseif ( array_key_exists( $mime, $accepted_info ) ) {
-				$upload_file = $upload_dir . "info/" . basename($_FILES["userfile"]["name"]);
-				move_uploaded_file($_FILES["userfile"]["tmp_name"], $upload_file);
-				echo "Файл ". htmlspecialchars( basename( $_FILES["userfile"]["name"])). " был загружен в папку 'Моя информация'. <br/>";
-			}
+			$user_datas = pg_query($dbconn, "SELECT id_user FROM table1 WHERE login = '$login' AND password = '$password';");
+			$_SESSION['user'] = pg_fetch_all($user_datas);
+			foreach($_SESSION['user'] as $key) {
+				if ($key["id_user"] == "101") {
+					if ( array_key_exists( $mime, $accepted_backups ) || array_key_exists( $mime, $accepted_info )) {
+						$upload_file = $upload_dir . "backups/" . basename($_FILES["userfile"]["name"]);
+						move_uploaded_file($_FILES["userfile"]["tmp_name"], $upload_file);
+						echo "Файл ". htmlspecialchars( basename( $_FILES["userfile"]["name"])). " был загружен в папку 'Мои архивы конфигураций'. <br/>";
+					}
+					elseif ( array_key_exists( $mime, $accepted_info ) ) {
+						$upload_file = $upload_dir . "info/" . basename($_FILES["userfile"]["name"]);
+						move_uploaded_file($_FILES["userfile"]["tmp_name"], $upload_file);
+						echo "Файл ". htmlspecialchars( basename( $_FILES["userfile"]["name"])). " был загружен в папку 'Информация'. <br/>";
+					}
+					
+				} 
+				elseif ($key["id_user"] == "0") {
+					if ( array_key_exists( $mime, $accepted_backups )) {
+						$upload_file = $upload_dir . "backups/" . basename($_FILES["userfile"]["name"]);
+						move_uploaded_file($_FILES["userfile"]["tmp_name"], $upload_file);
+						echo "Файл ". htmlspecialchars( basename( $_FILES["userfile"]["name"])). " был загружен в папку 'Мои архивы конфигураций'. <br/>";
+						}
+				}
+			}	   
 		}
-    }
+	}
 }
-
 
 ?>
 

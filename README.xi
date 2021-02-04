@@ -15,13 +15,17 @@
     . добавить - AstraMode off
         | sudo apt install libapache2-mod-php7.0 postgresql-9.6 php7.0 php7.0-pgsql 
         | sudo apt install php-cli php-common
-        | sudo systemctl reload apache2.service
+            | sudo systemctl reload apache2.service
 
     . после установки php проверить, что в /etc/php/7.0/apache2/php.ini разрешена загрузка файлов и установлен лимит на загрузку
         | max_file_uploads = 20
         | upload_max_filesoze = 2M
         | file_uploads = On
         | extension=php_fileinfo.dll //удалить коментарий ДЛЯ WINDOWS
+
+    . настройка /etc/postgreql/9.6/main/pg_hba.conf
+        | # IPv4 local connections:
+        | host     dbname      username    127.0.0.1/32     trust
 
 . postgresql
     . НАСТРОЙКА
@@ -32,35 +36,40 @@
         - подключится от него и создать новую таблицу (или подключится от postgres и создать в БД таблицу)
         - reload postgres
 
-        . создать таблицу table1 с полями:
-            | XXXXXXXXXX
-        . создать админа с id_user = 101
-
-    . БЕЗОПАСНОСТЬ
-        . подключится
+        . подключение
             | sudo -u postgres psql
 
         . создание БД
-            | create database имя_бд;
+            | CREATE DATABASE filehosting;
+            | CREATE ROLE userdb with login password '12345678';
+            | GRANT ALL ON DATABASE filehosting to userdb;
+            |
         . какие таблицы есть
             | \l
             | \d+
 
-        . узнать структуру таблицы
-            | \d имя_таблицы
-            | SELECT column_name, column_default, data_type 
-            | FROM INFORMATION_SCHEMA.COLUMNS 
-            | WHERE table_name = 'my_table';
+        . подключится под созданным пользователем
+            | psql -U пользователь -h localhost -d имя_БД
 
         . создать новую таблицу
-            | CREATE TABLE weather (
-            |   city            varchar(80),
-            |   temp_lo         int,           -- минимальная температура дня
-            |    temp_hi         int,           -- максимальная температура дня
-            |    prcp            real,          -- уровень осадков
-            |    date            date
-            | );
+            | CREATE TABLE table1 (
+            |   id              serial,           #сам увеличиавет каждую строку на 1
+            |   full_name       text,
+            |   login           text,
+            |   otdel           text,
+            |   podchin         text,
+            |   password        text,
+            |   id_user         integer,
+            |   user_folder     text);
 
+        . узнать структуру таблицы
+                    | \d имя_таблицы
+                    | SELECT column_name, column_default, data_type 
+                    | FROM INFORMATION_SCHEMA.COLUMNS 
+                    | WHERE table_name = 'my_table';
+
+        . создать админа с id_user = 101
+        
         . удалить таблицу
             | DROP TABLE имя_таблицы;
 

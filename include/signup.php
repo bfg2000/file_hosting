@@ -22,7 +22,7 @@
             $user_patch = $login . "-" . $user_date . "/";
             mkdir("/var/www/html/web/pus/uploads/" . $user_patch, 0700);
             mkdir("/var/www/html/web/pus/uploads/" . $user_patch . "backups/", 0700);
-            mkdir("/var/www/html/web/pus/uploads/" . $user_patch . "info/", 0700);
+            //mkdir("/var/www/html/web/pus/uploads/" . $user_patch . "info/", 0700);
 
             pg_query($dbconn, "INSERT INTO table1 (full_name, login, otdel, podchin, password, id_user, user_folder) VALUES ('$full_name', '$login', '$otdel', '$podchin', '$password', '0', '$user_patch')");
 		

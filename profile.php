@@ -18,10 +18,14 @@ if (!$_SESSION['user']) {
 <div class="main">
 	<div class="h-1">
     <h1>ПАНЕЛЬ ПОЛЬЗОВАТЕЛЯ</h1>
+		<div class="warning-info">
+            <h3>ВНИМАНИЕ!!! Разрешено сохранять только файлы резервных конфигураций!!!<br>
+                ЗАГРУЗКА ЗАПРЕЩЕНЫХ ФАЙЛОВ КАРАЕТСЯ введением анального зонтика!!!</h3>
+        </div>
 	</div>
 	<div class="button_upload" style='margin-top: 20px';>
 		<a href='type.php?typ=1' style='margin-right: 30px';>Мои архивы конфигураций</a>
-    		<a href='type.php?typ=2' style='margin-left: 30px';>Моя информация</a>
+    		<a href='type.php?typ=2' style='margin-left: 30px';>Информация</a>
 	</div>
 
 
